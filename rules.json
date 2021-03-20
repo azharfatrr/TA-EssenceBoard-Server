@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "name": "jumlah minimal alpha",
+    "description": "metode memiliki minimal 1 alpha",
+    "category": "element_count",
+    "filter": "TYPE=alpha",
+    "rule": "MINCOUNT=1",
+    "is_active": true
+  },
+  {
+    "id": "2",
+    "name": "jumlah minimal activity space",
+    "description": "metode memiliki minimal 1 activity space",
+    "category": "element_count",
+    "filter": "TYPE=activitySpace",
+    "rule": "MINCOUNT=1",
+    "is_active": true
+  },
+  {
+    "id": "3",
+    "name": "jumlah minimal work product",
+    "description": "metode memiliki minimal 1 work product",
+    "category": "element_count",
+    "filter": "TYPE=workProduct",
+    "rule": "MINCOUNT=1",
+    "is_active": true
+  },
+  {
+    "id": "4",
+    "name": "relasi activity dan activity space",
+    "description": "activity space memiliki minimal 1 activity",
+    "category": "connectivity",
+    "filter": "AND=TYPE=activitySpace,TYPE=activity",
+    "rule": "HASRELATION",
+    "is_active": true
+  },
+  {
+    "id": "5",
+    "name": "atribut alpha",
+    "description": "alpha memiliki minimal 1 alpha state",
+    "category": "properties",
+    "filter": "TYPE=alpha",
+    "rule": "MINPROPCOUNT=state,1",
+    "is_active": true
+  },
+  {
+    "id": "6",
+    "name": "atribut alpha",
+    "description": "alpha memiliki minimal 1 item checklist",
+    "category": "properties",
+    "filter": "TYPE=alpha",
+    "rule": "MINPROPCOUNT=checklist,1",
+    "is_active": true
+  },
+  {
+    "id": "7",
+    "name": "atribut competency",
+    "description": "competency memiliki minimal 1 competency level",
+    "category": "properties",
+    "filter": "TYPE=competency",
+    "rule": "MINPROPCOUNT=level,1",
+    "is_active": true
+  },
+  {
+    "id": "8",
+    "name": "relasi antar elemen Kernel",
+    "description": "semua elemen Kernal harus terhubung",
+    "category": "connectivity",
+    "filter": "TYPE=all",
+    "rule": "HASRELATION",
+    "is_active": true
+  }
+]

@@ -9,6 +9,7 @@ const cors = require('@koa/cors');
 const db = require('./res/mongo');
 const ObjectID = require("mongodb").ObjectID;
 require('koa-qs')(app, 'strict')
+const fs = require('fs');
 
 app.use(bodyParser({
     detectJSON: function (ctx) {
@@ -93,6 +94,15 @@ index.post("/method", async (ctx) => {
 
         })
         .catch((err) => console.error(err))
+});
+
+index.get("/rules", (ctx) => {
+    try {
+        const jsonString = fs.readFileSync('./rules.json')
+        ctx.body = jsonString;
+    } catch(err) {
+        console.log(err)
+    }
 });
 
 app.use(index.routes()).use(index.allowedMethods());
