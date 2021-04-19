@@ -96,13 +96,46 @@ index.post("/method", async (ctx) => {
         .catch((err) => console.error(err))
 });
 
-index.get("/rules", (ctx) => {
-    try {
-        const jsonString = fs.readFileSync('./rules.json')
-        ctx.body = jsonString;
-    } catch(err) {
-        console.log(err)
-    }
+index.post("/rules", async (ctx) => {
+    await MongoClient.connect(MONGO_URL, { useNewUrlParser: true })
+        .then(async (connection) => {
+            await connection.db("essence")
+                .collection('rule')
+                .insertOne(ctx.request.body)
+                .then((result) => {
+                ctx.body = JSON.stringify(result)
+            }).catch((err) => {
+                console.error(err)
+            });
+        })
+        .catch((err) => console.error(err))
+});
+
+index.get("/rules", async (ctx) => {
+    await MongoClient.connect(MONGO_URL, { useNewUrlParser: true })
+        .then(async (connection) => {
+            await connection.db("essence").collection('rule').find({}).toArray().then((result) => {
+                console.log("Database connection established")
+                ctx.body = JSON.stringify(result)
+            }).catch((err) => console.error(err));
+        })
+        .catch((err) => console.error(err))
+});
+
+index.put("/rules/:id", async (ctx) => {
+    delete ctx.request.body._id
+    delete ctx.request.body.color
+    var newvalues = { $set: ctx.request.body }
+
+    await MongoClient.connect(MONGO_URL, { useNewUrlParser: true })
+        .then(async (connection) => {
+            await connection.db("essence").collection('rule')
+                .updateOne({"_id": ObjectID(ctx.params.id)},newvalues).then((result) => {
+                console.log("Database connection established")
+                ctx.body = JSON.stringify(result)
+            }).catch((err) => console.error(err));
+        })
+        .catch((err) => console.error(err))
 });
 
 app.use(index.routes()).use(index.allowedMethods());
