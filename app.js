@@ -96,6 +96,36 @@ index.post("/method", async (ctx) => {
         .catch((err) => console.error(err))
 });
 
+index.post("/example/:id", async (ctx) => {
+    console.log(ctx.request.body)
+    await MongoClient.connect(MONGO_URL, { useNewUrlParser: true })
+        .then(async (connection) => {
+            await connection.db("essence")
+                .collection('example')
+                .findOne({"_id": ObjectID(ctx.params.id)})
+                .then(async (result) => {
+                    ctx.request.body.edge = result.edge
+                    ctx.request.body.essence_kernel = result.essence_kernel
+
+                    await MongoClient.connect(MONGO_URL, { useNewUrlParser: true })
+                        .then(async (connection) => {
+                            await connection.db("essence")
+                                .collection('method')
+                                .insertOne(ctx.request.body)
+                                .then((res) => {
+                                console.log("Created Data Method")
+
+                                ctx.body = JSON.stringify(res)
+                            }).catch((err) => {
+                                console.error(err)
+                            });
+                        })
+                        .catch((err) => console.error(err))
+            }).catch((err) => console.error(err));
+        })
+        .catch((err) => console.error(err))
+});
+
 index.post("/rules", async (ctx) => {
     await MongoClient.connect(MONGO_URL, { useNewUrlParser: true })
         .then(async (connection) => {
