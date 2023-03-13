@@ -74,11 +74,12 @@ index.put("/method/:id", async (ctx) => {
   }
 
   await connection.db("essence").collection('method')
-    .updateOne({ "nameId": ctx.params.id }, newValues, { upsert: true })
+    .insertOne(ctx.request.body)
     .then((result) => {
       ctx.body = JSON.stringify(result);
-    })
-    .catch((err) => console.error(err));
+    }).catch((err) => {
+      console.error(err);
+    });
 });
 
 index.post("/method", async (ctx) => {
