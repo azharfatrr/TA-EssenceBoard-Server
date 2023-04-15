@@ -82,6 +82,19 @@ index.put("/method/:id", async (ctx) => {
     });
 });
 
+index.delete("/method/:id", async (ctx) => {
+  await MongoClient.connect(MONGO_URL, { useNewUrlParser: true })
+    .then(async (connection) => {
+      await connection.db("essence")
+        .collection('method')
+        .deleteOne({ "_id": ObjectID(ctx.params.id) })
+        .then((result) => {
+          ctx.body = JSON.stringify(result);
+        }).catch((err) => console.error(err));
+    })
+    .catch((err) => console.error(err));
+});
+
 index.post("/method", async (ctx) => {
   console.log(ctx.request.body);
   await MongoClient.connect(MONGO_URL, { useNewUrlParser: true })
