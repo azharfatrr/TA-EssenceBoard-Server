@@ -116,6 +116,35 @@ index.post("/method", async (ctx) => {
     .catch((err) => console.error(err));
 });
 
+index.post("/method/:id/clone", async (ctx) => {
+  await MongoClient.connect(MONGO_URL, { useNewUrlParser: true })
+    .then(async (connection) => {
+      let methodChunk = await connection.db("essence")
+        .collection('method')
+        .findOne({ "_id": ObjectID(ctx.params.id) })
+        .then((result) => {
+          return result;
+        }).catch((err) => console.error(err));
+
+      // Remove the _id from the object
+      delete methodChunk._id;
+
+      // Add name and nameId to the object
+      methodChunk.name = ctx.request.body.name || methodChunk.name;
+      methodChunk.nameId = ctx.request.body.nameId || methodChunk.nameId;
+
+      await connection.db("essence")
+        .collection('method')
+        .insertOne(methodChunk)
+        .then((result) => {
+          ctx.body = result;
+        }).catch((err) => {
+          console.error(err);
+        });
+    })
+    .catch((err) => console.error(err));
+});
+
 index.post("/example/:id", async (ctx) => {
   console.log(ctx.request.body);
   await MongoClient.connect(MONGO_URL, { useNewUrlParser: true })
